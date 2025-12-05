@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="username" name="username" placeholder="Enter Username">
+    <button id="find">Find</button>
+    <script>
+        const find=document.querySelector("#find");
+
+        find.addEventListener("click",async ()=>{
+            const username=document.querySelector("#username").value;
+            try{
+                const response= await fetch(`https://api.github.com/users/${username}`);
+                if(!response.ok){
+                    return alert("something went wrong");
+                }
+                const data=await response.json();
+                const img=document.createElement("img");
+                img.setAttribute("src",data.avatar_url);
+                document.body.appendChild(img);
+                const bio=document.createElement("p");
+                bio.innerText=data.bio;
+                document.body.appendChild(bio);
+            } catch(err){
+                console.log(err);
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Movie Search</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            padding: 40px 20px;
+            font-family: 'Press Start 2P', cursive;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255, 255, 255, 0.03) 0px,
+                    transparent 1px,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 3px
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #fff;
+            text-shadow: 
+                3px 3px 0 #ff006e,
+                6px 6px 0 #8338ec,
+                9px 9px 0 #3a86ff;
+            font-size: 28px;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            animation: float 3s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .search-wrapper {
+            max-width: 900px;
+            margin: 0 auto 30px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 4px solid #fff;
+            box-shadow: 
+                8px 8px 0 rgba(255, 0, 110, 0.5),
+                16px 16px 0 rgba(131, 56, 236, 0.3);
+            padding: 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
+        }
+        
+        input[type="text"],
+        select {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px 20px;
+            border: 4px solid #fff;
+            background: rgba(255, 255, 255, 0.9);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: #333;
+            box-shadow: 
+                4px 4px 0 #ff006e,
+                8px 8px 0 #8338ec;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            transform: translate(-2px, -2px);
+            box-shadow: 
+                6px 6px 0 #ff006e,
+                12px 12px 0 #8338ec;
+        }
+        
+        select option {
+            background: #fff;
+            color: #333;
+        }
+        
+        button {
+            padding: 15px 30px;
+            border: 4px solid #fff;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 
+                4px 4px 0 #ff006e,
+                8px 8px 0 #8338ec;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+        
+        button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 
+                6px 6px 0 #ff006e,
+                12px 12px 0 #8338ec;
+        }
+        
+        button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 
+                2px 2px 0 #ff006e,
+                4px 4px 0 #8338ec;
+        }
+        
+        .clear {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        ::placeholder {
+            color: #999;
+            opacity: 1;
+        }
+        
+        .container {
+            background: 
+                linear-gradient(45deg, #ffd700 25%, transparent 25%),
+                linear-gradient(-45deg, #ffd700 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #ffd700 75%),
+                linear-gradient(-45deg, transparent 75%, #ffd700 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            background-color: #ff6b9d;
+            min-height: 400px;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 6px solid #fff;
+            box-shadow: 
+                10px 10px 0 rgba(255, 0, 110, 0.6),
+                20px 20px 0 rgba(131, 56, 236, 0.4),
+                30px 30px 0 rgba(58, 134, 255, 0.2);
+            position: relative;
+            z-index: 2;
+            animation: pulse-border 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-border {
+            0%, 100% { border-color: #fff; }
+            50% { border-color: #00f2fe; }
+        }
+        
+        .box {
+            width: 300px;
+            height: auto;
+            min-height: 120px;
+            margin: 10px;
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.85);
+            border: 4px solid #fff;
+            box-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.5),
+                inset 0 0 20px rgba(0, 0, 0, 0.2),
+                6px 6px 0 rgba(255, 0, 110, 0.4);
+            padding: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            vertical-align: top;
+        }
+        
+        .box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+        }
+        
+        .box:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 
+                0 0 30px rgba(255, 0, 255, 0.8),
+                inset 0 0 30px rgba(0, 255, 255, 0.2),
+                8px 8px 0 rgba(255, 0, 110, 0.6);
+            border-color: #00f2fe;
+        }
+        
+        .box:hover::before {
+            top: -100%;
+            left: -100%;
+        }
+        
+        .box img {
+            width: 80px;
+            height: 120px;
+            object-fit: cover;
+            float: left;
+            margin-right: 15px;
+            border: 3px solid #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .box h2 {
+            font-size: 11px;
+            color: #ff00ff;
+            text-shadow: 0 0 10px #ff00ff;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            max-height: 40px;
+            overflow: hidden;
+        }
+        
+        .box p {
+            font-size: 9px;
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff;
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            input[type="text"],
+            select,
+            button {
+                width: 100%;
+                min-width: auto;
+            }
+            
+            .box {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🎬 MOVIE FINDER 🎬</h1>
+    
+    <div class="search-wrapper">
+        <div class="input-group">
+            <input type="text" id="movie-title" name="movie-title" placeholder="enter movie name">
+            <select name="type" id="type">
+                <option disabled>Choose Type</option>
+                <option value="movie">Movie</option>
+                <option value="series">Series</option>
+                <option value="episode">Episode</option>
+            </select>
+            <button id="find">Search</button>
+            <button class="clear">Clear</button>
+        </div>
+    </div>
+    
+    <div class="container"></div>
+    
+    <script>
+        const find=document.querySelector("#find");
+        const container=document.querySelector(".container");
+        const clear=document.querySelector(".clear");
+        clear.addEventListener("click",()=>{
+            container.innerHTML=" ";
+        });
+        find.addEventListener("click",async ()=>{
+            const movie=document.querySelector("#movie-title").value;
+            const type=document.querySelector("#type").value;
+            try{
+                const response=await fetch(`http://www.omdbapi.com/?apikey=49a2b766&s=${movie}&type=${type}`);
+                if(!response.ok){
+                    return alert("Something went wrong");
+                }
+                const data=await response.json();
+                const movies=data.Search;
+                movies.forEach(element => {
+                    const box=document.createElement("div");
+                    box.classList.add("box")
+
+                    const image=document.createElement("img");
+                    image.setAttribute("src",element.Poster);
+                    box.appendChild(image);
+
+                    const title=document.createElement("h2");
+                    title.innerText=element.Title;
+                    box.appendChild(title);
+
+                    const mtype=document.createElement("p");
+                    mtype.innerText=element.Type;
+                    box.appendChild(mtype);
+
+                    const year=document.createElement("p");
+                    year.innerText=element.Year;
+                    box.appendChild(year);
+
+                    const imdbId=document.createElement("p");
+                    imdbId.innerText=element.imdbID;
+                    box.appendChild(imdbId);
+
+                    container.appendChild(box);
+
+                });
+            } catch(err){
+                return alert(err);
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box{
+            width:300px;
+            height: 100px;
+            margin: 10px;
+            display: inline-block;
+        } 
+        .container{
+            background-color: beige;
+            height: auto;
+            width: 900px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="movie-title" name="movie-title" placeholder="enter movie name">
+    <select name="type" id="type">
+        <option disabled>Choose Type</option>
+        <option value="movie">Movie</option>
+        <option value="series">Series</option>
+        <option value="episode">Episode</option>
+    </select>
+    <button id="find">Search</button>
+    <button class="clear">Clear</button>
+    <div class="container"></div>
+    <script>
+        const find=document.querySelector("#find");
+        const container=document.querySelector(".container");
+        const clear=document.querySelector(".clear");
+        clear.addEventListener("click",()=>{
+            container.innerHTML=" ";
+        });
+        find.addEventListener("click",async ()=>{
+            const movie=document.querySelector("#movie-title").value;
+            const type=document.querySelector("#type").value;
+            try{
+                const response=await fetch(`http://www.omdbapi.com/?apikey=49a2b766&s=${movie}&type=${type}`);
+                if(!response.ok){
+                    return alert("Something went wrong");
+                }
+                const data=await response.json();
+                const movies=data.Search;
+                movies.forEach(element => {
+                    const box=document.createElement("div");
+                    box.classList.add("box")
+
+                    const image=document.createElement("img");
+                    image.setAttribute("src",element.Poster);
+                    box.appendChild(image);
+
+                    const title=document.createElement("h2");
+                    title.innerText=element.Title;
+                    box.appendChild(title);
+
+                    const mtype=document.createElement("p");
+                    mtype.innerText=element.Type;
+                    box.appendChild(mtype);
+
+                    const year=document.createElement("p");
+                    year.innerText=element.Year;
+                    box.appendChild(year);
+
+                    const imdbId=document.createElement("p");
+                    imdbId.innerText=element.imdbID;
+                    box.appendChild(imdbId);
+
+                    container.appendChild(box);
+
+                });
+            } catch(err){
+                return alert(err);
+            }
+        })
+    </script>
+</body>
+</html>
